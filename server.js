@@ -6,15 +6,28 @@ const io = require("socket.io")(3000, {
         origin: "*"
     }
 });
+let qrToSend = null;
+
+io.on("connection", socket => {
+
+    socket.on("get_qr_code", () => {
+        if (qrToSend !== null) {
+            socket.emit("qr_code", qrToSend);
+        }
+    });
+
+    client.on('qr', (qr) => {
+        //console.log('QR RECEIVED', qr);
+        //qrcode.generate(qr, { small: true });
+        qrToSend = qr;
+        socket.emit("qr_code", qrToSend);
+    });
+
+});
 
 const number = "+972587587288";
 const chatId = number.substring(1) + "@c.us";
 let text = "hello";
-
-client.on('qr', (qr) => {
-    //console.log('QR RECEIVED', qr);
-    //qrcode.generate(qr, { small: true });
-});
 
 client.on('ready', () => {
     console.log('Client is ready!');
