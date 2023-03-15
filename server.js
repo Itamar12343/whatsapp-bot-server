@@ -32,7 +32,8 @@ let text = "hello";
 client.on('ready', () => {
     console.log('Client is ready!');
 
-    client.sendMessage(chatId, text);
+    socket.emit("loged in");
+    //client.sendMessage(chatId, text);
 });
 
 client.on('message', message => {
