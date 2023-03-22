@@ -6,9 +6,9 @@ const io = require("socket.io")(3000, {
     }
 });
 let qrToSend = null;
-const number = "+972587587286";
-const chatId = number.substring(1) + "@c.us";
-let text = "hello";
+//let number = "+972587587286";
+//let chatId = number.substring(1) + "@c.us";
+//let text = "hello";
 
 io.on("connection", socket => {
     const client = new Client();
@@ -18,6 +18,14 @@ io.on("connection", socket => {
         if (qrToSend !== null) {
             socket.emit("qr_code", qrToSend);
         }
+    });
+
+    socket.on("the client disconnected", () => {
+        console.log("closed");
+    })
+
+    socket.on("schedule_msg", msg => {
+        checkTime(msg);
     });
 
     client.on('qr', (qr) => {
@@ -30,15 +38,31 @@ io.on("connection", socket => {
     client.on('ready', () => {
         //console.log('Client is ready!');
         socket.emit("loged in");
-        client.sendMessage(chatId, text);
+        //client.sendMessage(chatId, text);
     });
 
     client.on("disconnected", () => {
         socket.emit("client_disconnected");
-    })
+    });
 
+
+    function checkTime(msg) {
+        setInterval(() => {
+            let today = new Date();
+            let hour = today.getHours();
+            let minute = today.getMinutes();
+            let time = hour + ":" + minute;
+            console.log(time);
+            console.log(msg.time);
+            if (time == msg.time) {
+                let number = msg.number;
+                let chatId = number.substring(1) + "@c.us";
+                let text = msg.text;
+                client.sendMessage(chatId, text);
+            }
+        }, 1000);
+    }
 });
-
 
 /*client.on('message', message => {
     //console.log(message.body);
