@@ -11,6 +11,10 @@ let qrToSend = null;
 //let text = "hello";
 
 io.on("connection", socket => {
+    session(socket);
+});
+
+function session(socket) {
     const client = new Client();
     client.initialize();
 
@@ -62,7 +66,7 @@ io.on("connection", socket => {
             }
         }, 1000);
     }
-});
+}
 
 /*client.on('message', message => {
     //console.log(message.body);
