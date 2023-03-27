@@ -1,5 +1,4 @@
 const { Client } = require('whatsapp-web.js');
-const qrcode = require('qrcode-terminal');
 const io = require("socket.io")(3000, {
     cors: {
         origin: "*"
@@ -17,6 +16,7 @@ io.on("connection", socket => {
 function session(socket) {
     const client = new Client();
     client.initialize();
+    let isconnected = false;
 
     socket.on("get_qr_code", () => {
         if (qrToSend !== null) {
@@ -25,16 +25,16 @@ function session(socket) {
     });
 
     socket.on("the client disconnected", () => {
-        console.log("closed");
-    })
+        if (isconnected === true) {
+            client.logout();
+        }
+    });
 
     socket.on("schedule_msg", msg => {
         checkTime(msg);
     });
 
     client.on('qr', (qr) => {
-        //console.log('QR RECEIVED', qr);
-        //qrcode.generate(qr, { small: true });
         qrToSend = qr;
         socket.emit("qr_code", qrToSend);
     });
@@ -42,6 +42,7 @@ function session(socket) {
     client.on('ready', () => {
         //console.log('Client is ready!');
         socket.emit("loged in");
+        isconnected = true;
         //client.sendMessage(chatId, text);
     });
 
