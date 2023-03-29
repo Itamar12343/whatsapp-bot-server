@@ -17,7 +17,6 @@ function session(socket) {
     const client = new Client();
     client.initialize();
     let isconnected = false;
-    //hjk
 
     socket.on("get_qr_code", () => {
         if (qrToSend !== null) {
