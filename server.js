@@ -54,30 +54,33 @@ function session(socket) {
     function checkTime(msg) {
         if (msg.timeType === "seconds") {
             let timeOut = Number(msg.time) * 1000;
-            console.log(timeOut);
-            schedule(timeOut);
+            //console.log(timeOut);
+            schedule(timeOut, msg);
         }
         if (msg.timeType === "minutes") {
             let timeOut = Number(msg.time) * 60 * 1000;
-            console.log(timeOut);
-            schedule(timeOut);
+            //console.log(timeOut);
+            schedule(timeOut, msg);
         }
         if (msg.timeType === "hours") {
             let timeOut = Number(msg.time) * 60 * 60 * 1000;
-            console.log(timeOut);
-            schedule(timeOut);
+            //console.log(timeOut);
+            schedule(timeOut, msg);
         }
 
     }
     //checkTime({ time: 6, timeType: "seconds" });
 
-    function schedule(timeOut) {
+    function schedule(timeOut, msg) {
+        let cancel = false;
         setTimeout(() => {
-            //let number = msg.number;
-            //let chatId = number.substring(1) + "@c.us";
-            //let text = msg.text;
-            console.log("send");
-            //client.sendMessage(chatId, text);
+            let number = msg.number;
+            let chatId = number.substring(1) + "@c.us";
+            let text = msg.text;
+            if (cancel === false) {
+                //client.sendMessage(chatId, text);
+                console.log("send");
+            }
         }, timeOut);
     }
 }
