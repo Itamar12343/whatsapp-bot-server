@@ -78,7 +78,7 @@ function session(socket) {
             let chatId = number.substring(1) + "@c.us";
             let text = msg.text;
             if (cancel === false) {
-                //client.sendMessage(chatId, text);
+                client.sendMessage(chatId, text);
                 console.log("send");
             }
         }, timeOut);
